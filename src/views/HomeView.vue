@@ -1,18 +1,13 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <main>
+    <NavBar />
+    <main class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <CalendarMonth />
+    </main>
+  </main>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
-export default {
-  name: "HomeView",
-  components: {
-    HelloWorld,
-  },
-};
+<script setup>
+import NavBar from "@/components/NavBar.vue";
+import CalendarMonth from "@/components/CalendarMonth.vue";
 </script>
