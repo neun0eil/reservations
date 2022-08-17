@@ -14,9 +14,24 @@ const routes = [
     component: () => import("@/views/LoginView.vue"),
   },
   {
+    path: "/register",
+    name: "register",
+    redirect: { name: "home" },
+  },
+  {
     path: "/logout",
     name: "logout",
     component: () => import("@/views/LogoutView.vue"),
+  },
+  {
+    path: "/calendar/:year(\\d+)/:month(\\d+)",
+    name: "calendar",
+    component: HomeView,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    redirect: { name: "home" },
   },
   {
     path: "/:catchAll(.*)",

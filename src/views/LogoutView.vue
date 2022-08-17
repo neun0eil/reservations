@@ -9,6 +9,11 @@ import { useStore } from "vuex";
 const store = useStore();
 const router = useRouter();
 
-store.commit("removeJwt");
-router.push({ name: "login" });
+(async () => {
+  await fetch("/auth/logout", {
+    method: "POST",
+  });
+  store.commit("removeJwt");
+  router.push({ name: "login" });
+})();
 </script>

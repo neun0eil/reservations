@@ -57,15 +57,13 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $data['password'] = Hash::make($data['password']);
-
         try {
             User::create($data);
         } catch (QueryException $e) {
             return response()->json($e, 400);
         }
 
-        if (!$token = Auth::attempt($request->only(['email', 'password'])))
+        if (!$token = Auth::attempt($request->only(['username', 'password'])))
             return response()->json(['error' => 'Unauthorized'], 401);
 
         return $this->respondWithToken($token, 201);

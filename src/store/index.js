@@ -1,13 +1,6 @@
 import { createStore } from "vuex";
 import jwt_decode from "jwt-decode";
 
-function decodeJwt(jwt) {
-  let decoded;
-  if (jwt && jwt.access_token && (decoded = jwt_decode(jwt.access_token)))
-    return decoded;
-  throw new Error("Invalid JWT");
-}
-
 export default createStore({
   state: {
     jwt: null,
@@ -16,21 +9,20 @@ export default createStore({
   mutations: {
     getJwt(state) {
       try {
-        const jwt = JSON.parse(localStorage.getItem("jwt"));
-        const payload = decodeJwt(jwt);
-        state.jwt = jwt;
-        state.payload = payload;
+        state.jwt =
+          sessionStorage.getItem("jwt") || localStorage.getItem("jwt");
+        if (state.jwt) state.payload = jwt_decode(state.jwt);
       } catch (e) {
         console.error(e);
         this.commit("removeJwt");
       }
     },
-    setJwt(state, jwt) {
+    setJwt(state, { jwt, remember }) {
       try {
-        const payload = decodeJwt(jwt);
-        localStorage.setItem("jwt", JSON.stringify(jwt));
+        state.payload = jwt_decode(jwt);
+        const storage = remember ? localStorage : sessionStorage;
+        storage.setItem("jwt", jwt);
         state.jwt = jwt;
-        state.payload = payload;
       } catch (e) {
         console.error(e);
         this.commit("removeJwt");
@@ -39,6 +31,7 @@ export default createStore({
     removeJwt(state) {
       state.jwt = null;
       state.payload = null;
+      sessionStorage.removeItem("jwt");
       localStorage.removeItem("jwt");
     },
   },

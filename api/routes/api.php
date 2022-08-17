@@ -17,13 +17,16 @@ use App\Http\Controllers\UserController;
 
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('me', [AuthController::class, 'me']);
-    Route::post('register', [AuthController::class, 'register']);
+    'prefix' => 'auth',
+    'controller' => AuthController::class
+], function () {
+    Route::post('login', 'login');
+    Route::post('logout', 'logout');
+    Route::post('refresh', 'refresh');
+    Route::post('me', 'me');
+    Route::post('register', 'register');
+    // Route::post('confirm', 'confirm');
+    // Route::post('reset', 'reset');
 });
 
 Route::apiResource("users", UserController::class);

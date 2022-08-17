@@ -4,114 +4,49 @@
       class="relative z-20 flex items-center justify-between border-b border-gray-200 py-4 px-6 lg:flex-none"
     >
       <h1 class="text-lg font-semibold text-gray-900">
-        <time datetime="2022-01">January 2022</time>
+        <time datetime="2022-01">{{ datetime }}</time>
       </h1>
       <div class="flex items-center">
         <div class="flex items-center rounded-md shadow-sm md:items-stretch">
           <button
+            @click="prevMonth"
             type="button"
             class="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
-            <span class="sr-only">Previous month</span>
+            <span class="sr-only">Mois précédent</span>
             <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
           </button>
           <button
+            @click="currentMonth"
             type="button"
             class="hidden border-t border-b border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:relative md:block"
           >
-            Today
+            Aujourd'hui
           </button>
           <span class="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
           <button
+            @click="nextMonth"
             type="button"
             class="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
-            <span class="sr-only">Next month</span>
+            <span class="sr-only">Mois suivant</span>
             <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
         <div class="hidden md:ml-4 md:flex md:items-center">
-          <Menu as="div" class="relative">
-            <MenuButton
-              type="button"
-              class="flex items-center rounded-md border border-gray-300 bg-white py-2 pl-3 pr-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-            >
-              Month view
-              <ChevronDownIcon
-                class="ml-2 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-            </MenuButton>
-
-            <transition
-              enter-active-class="transition ease-out duration-100"
-              enter-from-class="transform opacity-0 scale-95"
-              enter-to-class="transform opacity-100 scale-100"
-              leave-active-class="transition ease-in duration-75"
-              leave-from-class="transform opacity-100 scale-100"
-              leave-to-class="transform opacity-0 scale-95"
-            >
-              <MenuItems
-                class="focus:outline-none absolute right-0 mt-3 w-36 origin-top-right overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-              >
-                <div class="py-1">
-                  <MenuItem v-slot="{ active }">
-                    <a
-                      href="#"
-                      :class="[
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                      >Day view</a
-                    >
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <a
-                      href="#"
-                      :class="[
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                      >Week view</a
-                    >
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <a
-                      href="#"
-                      :class="[
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                      >Month view</a
-                    >
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <a
-                      href="#"
-                      :class="[
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                      >Year view</a
-                    >
-                  </MenuItem>
-                </div>
-              </MenuItems>
-            </transition>
-          </Menu>
           <div class="ml-6 h-6 w-px bg-gray-300" />
-          <button
-            type="button"
+          <router-link
+            :to="{ name: 'home' }"
             class="focus:outline-none ml-6 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Add event
-          </button>
+            Ajouter un évènement
+          </router-link>
         </div>
         <Menu as="div" class="relative ml-6 md:hidden">
           <MenuButton
             class="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500"
           >
-            <span class="sr-only">Open menu</span>
+            <span class="sr-only">Ouvrir le menu</span>
             <DotsHorizontalIcon class="h-5 w-5" aria-hidden="true" />
           </MenuButton>
 
@@ -124,71 +59,30 @@
             leave-to-class="transform opacity-0 scale-95"
           >
             <MenuItems
-              class="focus:outline-none absolute right-0 mt-3 w-36 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+              class="focus:outline-none absolute right-0 mt-3 w-44 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
             >
               <div class="py-1">
                 <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >Create event</a
+                  <router-link
+                    :to="{ name: 'home' }"
+                    class="block px-4 py-2 text-sm cursor-pointer"
+                    :class="
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                    "
                   >
+                    Ajouter un évènement
+                  </router-link>
                 </MenuItem>
               </div>
               <div class="py-1">
                 <MenuItem v-slot="{ active }">
                   <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >Go to today</a
-                  >
-                </MenuItem>
-              </div>
-              <div class="py-1">
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >Day view</a
-                  >
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >Week view</a
-                  >
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >Month view</a
-                  >
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >Year view</a
+                    @click="currentMonth"
+                    class="block px-4 py-2 text-sm cursor-pointer"
+                    :class="
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                    "
+                    >Aller à aujourd'hui</a
                   >
                 </MenuItem>
               </div>
@@ -204,25 +98,25 @@
         class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none"
       >
         <div class="bg-white py-2">
-          M<span class="sr-only sm:not-sr-only">on</span>
+          L<span class="sr-only sm:not-sr-only">un</span>
         </div>
         <div class="bg-white py-2">
-          T<span class="sr-only sm:not-sr-only">ue</span>
+          M<span class="sr-only sm:not-sr-only">ar</span>
         </div>
         <div class="bg-white py-2">
-          W<span class="sr-only sm:not-sr-only">ed</span>
+          M<span class="sr-only sm:not-sr-only">er</span>
         </div>
         <div class="bg-white py-2">
-          T<span class="sr-only sm:not-sr-only">hu</span>
+          J<span class="sr-only sm:not-sr-only">eu</span>
         </div>
         <div class="bg-white py-2">
-          F<span class="sr-only sm:not-sr-only">ri</span>
+          V<span class="sr-only sm:not-sr-only">en</span>
         </div>
         <div class="bg-white py-2">
-          S<span class="sr-only sm:not-sr-only">at</span>
+          S<span class="sr-only sm:not-sr-only">am</span>
         </div>
         <div class="bg-white py-2">
-          S<span class="sr-only sm:not-sr-only">un</span>
+          D<span class="sr-only sm:not-sr-only">im</span>
         </div>
       </div>
       <div
@@ -234,10 +128,10 @@
           <div
             v-for="day in days"
             :key="day.date"
-            :class="[
-              day.isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-500',
-              'relative py-2 px-3',
-            ]"
+            class="relative py-2 px-3"
+            :class="
+              day.isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-500'
+            "
           >
             <time
               :datetime="day.date"
@@ -276,6 +170,7 @@
             v-for="day in days"
             :key="day.date"
             type="button"
+            class="flex h-14 flex-col py-2 px-3 hover:bg-gray-100 focus:z-10"
             :class="[
               day.isCurrentMonth ? 'bg-white' : 'bg-gray-50',
               (day.isSelected || day.isToday) && 'font-semibold',
@@ -289,17 +184,16 @@
                 !day.isCurrentMonth &&
                 !day.isToday &&
                 'text-gray-500',
-              'flex h-14 flex-col py-2 px-3 hover:bg-gray-100 focus:z-10',
             ]"
           >
             <time
               :datetime="day.date"
+              class="ml-auto"
               :class="[
                 day.isSelected &&
                   'flex h-6 w-6 items-center justify-center rounded-full',
                 day.isSelected && day.isToday && 'bg-indigo-600',
                 day.isSelected && !day.isToday && 'bg-gray-900',
-                'ml-auto',
               ]"
               >{{ day.date.split("-").pop().replace(/^0/, "") }}</time
             >
@@ -356,132 +250,90 @@
 
 <script setup>
 import {
-  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ClockIcon,
   DotsHorizontalIcon,
 } from "@heroicons/vue/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const days = [
-  { date: "2021-12-27", events: [] },
-  { date: "2021-12-28", events: [] },
-  { date: "2021-12-29", events: [] },
-  { date: "2021-12-30", events: [] },
-  { date: "2021-12-31", events: [] },
-  { date: "2022-01-01", isCurrentMonth: true, events: [] },
-  { date: "2022-01-02", isCurrentMonth: true, events: [] },
-  {
-    date: "2022-01-03",
-    isCurrentMonth: true,
-    events: [
-      {
-        id: 1,
-        name: "Design review",
-        time: "10AM",
-        datetime: "2022-01-03T10:00",
-        href: "#",
-      },
-      {
-        id: 2,
-        name: "Sales meeting",
-        time: "2PM",
-        datetime: "2022-01-03T14:00",
-        href: "#",
-      },
-    ],
-  },
-  { date: "2022-01-04", isCurrentMonth: true, events: [] },
-  { date: "2022-01-05", isCurrentMonth: true, events: [] },
-  { date: "2022-01-06", isCurrentMonth: true, events: [] },
-  {
-    date: "2022-01-07",
-    isCurrentMonth: true,
-    events: [
-      {
-        id: 3,
-        name: "Date night",
-        time: "6PM",
-        datetime: "2022-01-08T18:00",
-        href: "#",
-      },
-    ],
-  },
-  { date: "2022-01-08", isCurrentMonth: true, events: [] },
-  { date: "2022-01-09", isCurrentMonth: true, events: [] },
-  { date: "2022-01-10", isCurrentMonth: true, events: [] },
-  { date: "2022-01-11", isCurrentMonth: true, events: [] },
-  {
-    date: "2022-01-12",
-    isCurrentMonth: true,
-    isToday: true,
-    events: [
-      {
-        id: 6,
-        name: "Sam's birthday party",
-        time: "2PM",
-        datetime: "2022-01-25T14:00",
-        href: "#",
-      },
-    ],
-  },
-  { date: "2022-01-13", isCurrentMonth: true, events: [] },
-  { date: "2022-01-14", isCurrentMonth: true, events: [] },
-  { date: "2022-01-15", isCurrentMonth: true, events: [] },
-  { date: "2022-01-16", isCurrentMonth: true, events: [] },
-  { date: "2022-01-17", isCurrentMonth: true, events: [] },
-  { date: "2022-01-18", isCurrentMonth: true, events: [] },
-  { date: "2022-01-19", isCurrentMonth: true, events: [] },
-  { date: "2022-01-20", isCurrentMonth: true, events: [] },
-  { date: "2022-01-21", isCurrentMonth: true, events: [] },
-  {
-    date: "2022-01-22",
-    isCurrentMonth: true,
-    isSelected: true,
-    events: [
-      {
-        id: 4,
-        name: "Maple syrup museum",
-        time: "3PM",
-        datetime: "2022-01-22T15:00",
-        href: "#",
-      },
-      {
-        id: 5,
-        name: "Hockey game",
-        time: "7PM",
-        datetime: "2022-01-22T19:00",
-        href: "#",
-      },
-    ],
-  },
-  { date: "2022-01-23", isCurrentMonth: true, events: [] },
-  { date: "2022-01-24", isCurrentMonth: true, events: [] },
-  { date: "2022-01-25", isCurrentMonth: true, events: [] },
-  { date: "2022-01-26", isCurrentMonth: true, events: [] },
-  { date: "2022-01-27", isCurrentMonth: true, events: [] },
-  { date: "2022-01-28", isCurrentMonth: true, events: [] },
-  { date: "2022-01-29", isCurrentMonth: true, events: [] },
-  { date: "2022-01-30", isCurrentMonth: true, events: [] },
-  { date: "2022-01-31", isCurrentMonth: true, events: [] },
-  { date: "2022-02-01", events: [] },
-  { date: "2022-02-02", events: [] },
-  {
-    date: "2022-02-03",
-    events: [
-      {
-        id: 7,
-        name: "Cinema with friends",
-        time: "9PM",
-        datetime: "2022-02-04T21:00",
-        href: "#",
-      },
-    ],
-  },
-  { date: "2022-02-04", events: [] },
-  { date: "2022-02-05", events: [] },
-  { date: "2022-02-06", events: [] },
-];
-const selectedDay = days.find(day => day.isSelected);
+const router = useRouter();
+const route = useRoute();
+
+// {
+//   date: "2022-01-03",
+//   isCurrentMonth: true,
+//   isToday: true,
+//   isSelected: true,
+//   events: [
+//     {
+//       id: 1,
+//       name: "Design review",
+//       time: "10AM",
+//       datetime: "2022-01-03T10:00",
+//       href: "#",
+//     },
+//   ],
+// },
+
+const date = ref(
+  route.params.year && route.params.month
+    ? new Date(Number(route.params.year), Number(route.params.month))
+    : new Date()
+);
+
+const datetime = computed(() =>
+  (s => s.charAt(0).toUpperCase() + s.substring(1))(
+    new Intl.DateTimeFormat("fr-fr", {
+      month: "long",
+      year: "numeric",
+    }).format(date.value)
+  )
+);
+
+const days = computed(genMonth);
+const year = computed(() => date.value.getFullYear());
+const month = computed(() => date.value.getMonth());
+const selectedDay = computed(() => days.value.find(day => day.isSelected));
+
+function updateMonth(value) {
+  date.value = Number.isInteger(value)
+    ? new Date(year.value, month.value + value)
+    : new Date();
+  router.push({
+    name: "calendar",
+    params: { year: year.value, month: month.value + 1 },
+  });
+}
+
+const prevMonth = () => updateMonth(-1);
+const nextMonth = () => updateMonth(1);
+const currentMonth = () => updateMonth();
+
+function genMonth() {
+  const fn = n => (n < 10 ? "0" : "") + n;
+  const fd = d =>
+    `${d.getFullYear()}-${fn(d.getMonth() + 1)}-${fn(d.getDate())}`;
+  const today = fd(new Date());
+  const startOfMonth = new Date(year.value, month.value, 1).getDay() - 1;
+  const daysInMonth = new Date(year.value, month.value + 1, 0).getDate();
+  const iterations = Math.ceil((daysInMonth + startOfMonth) / 7) * 7;
+  const days = [];
+  const cursor = new Date(year.value, month.value);
+  cursor.setDate(1 - startOfMonth);
+  for (let i = 0; i < iterations; i++) {
+    const cfd = fd(cursor);
+    const day = {
+      date: cfd,
+      events: [],
+    };
+    if (cursor.getMonth() === month.value) day.isCurrentMonth = true;
+    if (today === cfd) day.isToday = true;
+    days.push(day);
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return days;
+}
 </script>

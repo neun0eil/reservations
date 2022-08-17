@@ -7,7 +7,7 @@
           <DisclosureButton
             class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
           >
-            <span class="sr-only">Open main menu</span>
+            <span class="sr-only">Ouvrir le menu principal</span>
             <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
             <XIcon v-else class="block h-6 w-6" aria-hidden="true" />
           </DisclosureButton>
@@ -16,31 +16,23 @@
           class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start"
         >
           <div class="flex-shrink-0 flex items-center">
-            <img
-              class="block lg:hidden h-8 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=500"
-              alt="Workflow"
-            />
-            <img
-              class="hidden lg:block h-8 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=500"
-              alt="Workflow"
-            />
+            <img class="block lg:hidden h-8 w-auto" :src="Logo" alt="Logo" />
+            <img class="hidden lg:block h-8 w-auto" :src="Logo" alt="Logo" />
           </div>
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4">
-              <a
+              <router-link
                 v-for="item in navigation"
                 :key="item.name"
-                :href="item.href"
-                :class="[
+                :to="item"
+                class="px-3 py-2 rounded-md text-sm font-medium"
+                :class="
                   item.current
                     ? 'bg-gray-900 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                  'px-3 py-2 rounded-md text-sm font-medium',
-                ]"
-                :aria-current="item.current ? 'page' : undefined"
-                >{{ item.name }}</a
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                "
+                :aria-current="!item.current ? 'page' : undefined"
+                >{{ item.title }}</router-link
               >
             </div>
           </div>
@@ -52,7 +44,7 @@
             type="button"
             class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
           >
-            <span class="sr-only">View notifications</span>
+            <span class="sr-only">Voir les notifications</span>
             <BellIcon class="h-6 w-6" aria-hidden="true" />
           </button>
 
@@ -60,14 +52,10 @@
           <Menu as="div" class="ml-3 relative">
             <div>
               <MenuButton
-                class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
               >
-                <span class="sr-only">Open user menu</span>
-                <img
-                  class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                />
+                <span class="sr-only">Ouvrir le menu de l'utilisateur</span>
+                <UserCircleIcon class="h-6 w-6" aria-hidden="true" />
               </MenuButton>
             </div>
             <transition
@@ -79,36 +67,22 @@
               leave-to-class="transform opacity-0 scale-95"
             >
               <MenuItems
-                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                class="origin-top-right z-30 absolute right-0 mt-2 w-32 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
               >
                 <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]"
-                    >Your Profile</a
-                  >
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]"
-                    >Settings</a
+                  <router-link
+                    :to="{ name: 'profile' }"
+                    class="block px-4 py-2 text-sm text-gray-700"
+                    :class="active ? 'bg-gray-100' : undefined"
+                    >Votre profile</router-link
                   >
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <router-link
                     :to="{ name: 'logout' }"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]"
-                    >Sign out</router-link
+                    class="block px-4 py-2 text-sm text-gray-700"
+                    :class="active ? 'bg-gray-100' : undefined"
+                    >Se déconnecter</router-link
                   >
                 </MenuItem>
               </MenuItems>
@@ -120,20 +94,19 @@
 
     <DisclosurePanel class="sm:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1">
-        <DisclosureButton
-          v-for="item in navigation"
-          :key="item.name"
-          as="a"
-          :href="item.href"
-          :class="[
-            item.current
-              ? 'bg-gray-900 text-white'
-              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-            'block px-3 py-2 rounded-md text-base font-medium',
-          ]"
-          :aria-current="item.current ? 'page' : undefined"
-          >{{ item.name }}</DisclosureButton
-        >
+        <router-link v-for="item in navigation" :key="item.name" :to="item">
+          <DisclosureButton
+            as="div"
+            class="block px-3 py-2 rounded-md text-base font-medium"
+            :class="
+              item.current
+                ? 'bg-gray-900 text-white'
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+            "
+            :aria-current="item.current ? 'page' : undefined"
+            >{{ item.title }}</DisclosureButton
+          >
+        </router-link>
       </div>
     </DisclosurePanel>
   </Disclosure>
@@ -149,17 +122,18 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/vue";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
+import {
+  BellIcon,
+  UserCircleIcon,
+  MenuIcon,
+  XIcon,
+} from "@heroicons/vue/outline";
+import Logo from "@/assets/logo.svg";
 import { useStore } from "vuex";
 
 const store = useStore();
 
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-];
+const navigation = [{ title: "Calendrier", name: "home", current: true }];
 
 console.log(store.state.payload);
 </script>

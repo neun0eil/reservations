@@ -4,22 +4,20 @@
   >
     <div class="max-w-md w-full space-y-8">
       <div>
-        <img
-          class="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
-          alt="Workflow"
-        />
+        <img class="mx-auto h-32 w-auto" :src="Logo" alt="Logo" />
         <h2
           class="mt-6 text-center text-3xl tracking-tight font-bold text-gray-900"
         >
-          Sign in to your account
+          Connectez-vous
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          Or
-          {{ " " }}
-          <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-            start your 14-day free trial
-          </a>
+          Ou
+          <router-link
+            :to="{ name: 'register' }"
+            class="font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            créez votre compte
+          </router-link>
         </p>
       </div>
       <form class="mt-8 space-y-6" @submit.prevent="submit">
@@ -74,6 +72,7 @@
           <button
             type="submit"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            :disabled="isLoading"
           >
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <LockClosedIcon
@@ -94,25 +93,30 @@ import { LockClosedIcon } from "@heroicons/vue/solid";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import Logo from "@/assets/logo.svg";
 
 const username = ref("");
 const password = ref("");
 const remember = ref(false);
+const isLoading = ref(false);
 const store = useStore();
 const router = useRouter();
 
-function submit() {
-  fetch("/auth/login", {
+async function submit() {
+  isLoading.value = true;
+  const res = await fetch("/auth/login", {
     method: "POST",
     body: JSON.stringify({
       username: username.value,
       password: password.value,
     }),
-  }).then(async res => {
-    if (res.status !== 200) return;
-    const jwt = await res.json();
-    store.commit("setJwt", jwt);
-    router.push({ name: "home" });
   });
+  isLoading.value = false;
+  if (res.status !== 200) return;
+  store.commit("setJwt", {
+    jwt: (await res.json()).access_token,
+    remember: remember.value,
+  });
+  router.push({ name: "home" });
 }
 </script>
