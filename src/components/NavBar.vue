@@ -129,11 +129,6 @@ import {
   XIcon,
 } from "@heroicons/vue/outline";
 import Logo from "@/assets/logo.svg";
-import { useStore } from "vuex";
-
-const store = useStore();
 
 const navigation = [{ title: "Calendrier", name: "home", current: true }];
-
-console.log(store.state.payload);
 </script>

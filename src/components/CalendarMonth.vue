@@ -1,10 +1,10 @@
 <template>
-  <div class="lg:flex lg:h-full lg:flex-col">
+  <div class="lg:flex-1 lg:flex lg:h-full lg:flex-col">
     <header
       class="relative z-20 flex items-center justify-between border-b border-gray-200 py-4 px-6 lg:flex-none"
     >
       <h1 class="text-lg font-semibold text-gray-900">
-        <time datetime="2022-01">{{ datetime }}</time>
+        <time datetime="2022-01">{{ monthYear }}</time>
       </h1>
       <div class="flex items-center">
         <div class="flex items-center rounded-md shadow-sm md:items-stretch">
@@ -92,7 +92,7 @@
       </div>
     </header>
     <div
-      class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col"
+      class="shadow ring-1 ring-black ring-opacity-5 sm:rounded-md overflow-hidden lg:flex lg:flex-auto lg:flex-col"
     >
       <div
         class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none"
@@ -123,15 +123,17 @@
         class="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto"
       >
         <div
-          class="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px"
+          class="hidden w-full lg:grid lg:grid-cols-7 lg:gap-px"
+          :class="'lg:grid-rows-' + rows"
         >
           <div
             v-for="day in days"
             :key="day.date"
             class="relative py-2 px-3"
-            :class="
-              day.isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-500'
-            "
+            :class="[
+              day.isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-500',
+              day.isToday ? 'bg-indigo-100' : 'hover:bg-gray-100',
+            ]"
           >
             <time
               :datetime="day.date"
@@ -164,7 +166,8 @@
           </div>
         </div>
         <div
-          class="isolate grid w-full grid-cols-7 grid-rows-6 gap-px lg:hidden"
+          class="isolate grid w-full grid-cols-7 gap-px lg:hidden"
+          :class="'grid-rows-' + rows"
         >
           <button
             v-for="day in days"
@@ -258,33 +261,36 @@ import {
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useHead } from "@vueuse/head";
 
 const router = useRouter();
 const route = useRoute();
 
-// {
-//   date: "2022-01-03",
-//   isCurrentMonth: true,
-//   isToday: true,
-//   isSelected: true,
-//   events: [
-//     {
-//       id: 1,
-//       name: "Design review",
-//       time: "10AM",
-//       datetime: "2022-01-03T10:00",
-//       href: "#",
-//     },
-//   ],
-// },
+// const days = [
+//   {
+//     date: "2022-01-03",
+//     isCurrentMonth: true,
+//     isToday: true,
+//     isSelected: true,
+//     events: [
+//       {
+//         id: 1,
+//         name: "Design review",
+//         time: "10AM",
+//         datetime: "2022-01-03T10:00",
+//         href: "#",
+//       },
+//     ],
+//   },
+// ];
 
 const date = ref(
   route.params.year && route.params.month
-    ? new Date(Number(route.params.year), Number(route.params.month))
+    ? new Date(Number(route.params.year), Number(route.params.month) - 1)
     : new Date()
 );
 
-const datetime = computed(() =>
+const monthYear = computed(() =>
   (s => s.charAt(0).toUpperCase() + s.substring(1))(
     new Intl.DateTimeFormat("fr-fr", {
       month: "long",
@@ -296,7 +302,12 @@ const datetime = computed(() =>
 const days = computed(genMonth);
 const year = computed(() => date.value.getFullYear());
 const month = computed(() => date.value.getMonth());
+const rows = ref(1);
 const selectedDay = computed(() => days.value.find(day => day.isSelected));
+
+useHead({
+  title: computed(() => `Calendrier - ${monthYear.value}`),
+});
 
 function updateMonth(value) {
   date.value = Number.isInteger(value)
@@ -319,7 +330,8 @@ function genMonth() {
   const today = fd(new Date());
   const startOfMonth = new Date(year.value, month.value, 1).getDay() - 1;
   const daysInMonth = new Date(year.value, month.value + 1, 0).getDate();
-  const iterations = Math.ceil((daysInMonth + startOfMonth) / 7) * 7;
+  rows.value = Math.ceil((daysInMonth + startOfMonth) / 7);
+  const iterations = rows.value * 7;
   const days = [];
   const cursor = new Date(year.value, month.value);
   cursor.setDate(1 - startOfMonth);

@@ -2,9 +2,15 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import { createHead } from "@vueuse/head";
 import "./index.css";
 
-createApp(App).use(store).use(router).mount("#app");
+const head = createHead({
+  title: "Accueil",
+  titleTemplate: "%s - Tir Club Saint Lyé",
+});
+
+createApp(App).use(store).use(router).use(head).mount("#app");
 
 window.fetch = (function (_super) {
   return function (resource, options = {}) {
